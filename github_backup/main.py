@@ -12,12 +12,12 @@ from github_backup.git import backup_repos
 DEFAULT_DIR = '~/.github-bkp'
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Script to backup GitHub repositories by mirroring them locally.')
+    parser = argparse.ArgumentParser(description='Script to backup GitHub repositories by mirroring them locally')
     parser.add_argument('username', help='The GitHub username to back up')
     parser.add_argument('-d', dest='backup_dir', default=DEFAULT_DIR,
-            help='Directory to back up to (defaults to %s' % DEFAULT_DIR)
+            help='Directory to back up to (defaults to %s)' % DEFAULT_DIR)
     parser.add_argument('-m', dest='meta_only', action='store_true',
-            help='Don\'t mirror repositories; dump metadata to stdout only')
+            help='Don\'t mirror repositories; instead dump their metadata to stdout')
     return parser.parse_args()
 
 def dump_metadata(repos):
