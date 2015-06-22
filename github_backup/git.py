@@ -1,30 +1,35 @@
-import os.path
+import logging
+import os
 import shutil
 import subprocess
 
 def git_clone(repo_url, dest, *args):
     a = 'git clone {repo_url} {dest}'.format(repo_url=repo_url, dest=dest).split()
     a.extend(args)
-    print('running `%s`' % ' '.join(a))
+    logging.debug('Running `%s`' % ' '.join(a))
+
     try:
-        subprocess.check_call(a)
+        stdout = subprocess.check_output(a, stderr=subprocess.STDOUT)
     except:
         # Clean up in case of exception during cloning. This
         # prevents leaving us with a half-populated directory
         if os.path.exists(dest):
             shutil.rmtree(dest)
         raise
+    else:
+        logging.debug(stdout.decode('utf-8').strip())
 
 def git_update(repo_url, dest, *args):
     a = 'git remote update'.split()
-    print('running `%s` on %s' % (' '.join(a), dest))
-    subprocess.check_call(a, cwd=dest)
+    logging.debug('Running `%s` on %s' % (' '.join(a), dest))
+    stdout = subprocess.check_output(a, cwd=dest, stderr=subprocess.STDOUT)
+    logging.debug(stdout.decode('utf-8').strip())
 
 def backup_repos(repos, backup_dir):
     backup_dir = os.path.realpath(os.path.expanduser(backup_dir))
     if not os.path.exists(backup_dir):
         os.mkdir(backup_dir)
-        print('created', backup_dir)
+        logging.debug('Created top-level directory', backup_dir)
 
     for r in repos:
         repo_name = r['clone_url'].split('/')[-1]
